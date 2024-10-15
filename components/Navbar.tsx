@@ -1,15 +1,22 @@
 "use client";
 import { useState } from "react";
+import clsx from "clsx";
 
 import logo from "@/assets/images/logo-white.png";
 import profileDefault from "@/assets/images/profile.png";
 import Image from "next/image";
 import Link from "next/link";
 import { FaGoogle } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+	const pathname = usePathname();
+	console.log("pathname", pathname);
 
 	const handleOpenMobileMenu = () => {
 		setIsMobileMenuOpen((prev) => !prev);
@@ -18,6 +25,12 @@ const Navbar = () => {
 	const handleOpenProfileMenu = () => {
 		setIsProfileMenuOpen((prev) => !prev);
 	};
+
+	const links = [
+		{ name: "Home", href: "/" },
+		{ name: "Properties", href: "/properties" },
+		{ name: "Add Property", href: "/properties/add" },
+	];
 
 	return (
 		<nav className="bg-blue-700 border-b border-blue-500">
@@ -64,134 +77,133 @@ const Navbar = () => {
 						{/* <!-- Desktop Menu Hidden below md screens --> */}
 						<div className="hidden md:ml-6 md:block">
 							<div className="flex space-x-2">
-								<Link
-									href="/"
-									className="text-white bg-black hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
-								>
-									Home
-								</Link>
-								<Link
-									href="/properties"
-									className="text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
-								>
-									Properties
-								</Link>
-								<Link
-									href="/properties/add"
-									className="text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
-								>
-									Add Property
-								</Link>
+								{links.map((link) => (
+									<Link
+										key={link.href}
+										href={link.href}
+										className={clsx("text-white block rounded-md px-3 py-2", {
+											"bg-black": pathname === link.href,
+											hidden: !isLoggedIn && link.href === "/properties/add",
+										})}
+									>
+										{link.name}
+									</Link>
+								))}
 							</div>
 						</div>
 					</div>
 
 					{/* <!-- Right Side Menu (Logged Out) --> */}
-					<div className="hidden md:block md:ml-6">
-						<div className="flex items-center">
-							<button
-								type="button"
-								className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
-							>
-								<FaGoogle className="text-white mr-2" />
-								<span>Login or Register</span>
-							</button>
-						</div>
-					</div>
-
-					{/* <!-- Right Side Menu (Logged In) --> */}
-					<div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
-						<a href="messages" className="relative group">
-							<button
-								type="button"
-								className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-							>
-								{/* biome-ignore lint/style/useSelfClosingElements: <explanation> */}
-								<span className="absolute -inset-1.5"></span>
-								<span className="sr-only">View notifications</span>
-								<svg
-									className="h-6 w-6"
-									fill="none"
-									viewBox="0 0 24 24"
-									strokeWidth="1.5"
-									stroke="currentColor"
-									aria-hidden="true"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
-									/>
-								</svg>
-							</button>
-							<span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
-								2
-								{/* <!-- Replace with the actual number of notifications --> */}
-							</span>
-						</a>
-						{/* <!-- Profile dropdown button --> */}
-						<div className="relative ml-3">
-							<div>
+					{!isLoggedIn && (
+						<div className="hidden md:block md:ml-6">
+							<div className="flex items-center">
 								<button
 									type="button"
-									className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-									id="user-menu-button"
-									aria-expanded="false"
-									aria-haspopup="true"
-									onClick={handleOpenProfileMenu}
+									className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
+								>
+									<FaGoogle className="text-white mr-2" />
+									<span>Login or Register</span>
+								</button>
+							</div>
+						</div>
+					)}
+
+					{/* <!-- Right Side Menu (Logged In) --> */}
+					{isLoggedIn && (
+						<div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
+							<a href="messages" className="relative group">
+								<button
+									type="button"
+									className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
 								>
 									{/* biome-ignore lint/style/useSelfClosingElements: <explanation> */}
 									<span className="absolute -inset-1.5"></span>
-									<span className="sr-only">Open user menu</span>
-									<Image
-										className="h-8 w-8 rounded-full"
-										src={profileDefault}
-										alt=""
-									/>
+									<span className="sr-only">View notifications</span>
+									<svg
+										className="h-6 w-6"
+										fill="none"
+										viewBox="0 0 24 24"
+										strokeWidth="1.5"
+										stroke="currentColor"
+										aria-hidden="true"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+										/>
+									</svg>
 								</button>
-							</div>
-
-							{/* <!-- Profile dropdown --> */}
-							{isProfileMenuOpen && (
-								<div
-									id="user-menu"
-									className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-									role="menu"
-									aria-orientation="vertical"
-									aria-labelledby="user-menu-button"
-									tabIndex={-1}
-								>
-									<Link
-										href="/profile"
-										className="block px-4 py-2 text-sm text-gray-700"
-										role="menuitem"
-										tabIndex={-1}
-										id="user-menu-item-0"
-									>
-										Your Profile
-									</Link>
-									<Link
-										href="/saved-properties"
-										className="block px-4 py-2 text-sm text-gray-700"
-										role="menuitem"
-										tabIndex={-1}
-										id="user-menu-item-2"
-									>
-										Saved Properties
-									</Link>
+								<span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+									2
+									{/* <!-- Replace with the actual number of notifications --> */}
+								</span>
+							</a>
+							{/* <!-- Profile dropdown button --> */}
+							<div className="relative ml-3">
+								<div>
 									<button
 										type="button"
-										className="block px-4 py-2 text-sm text-gray-700"
-										role="menuitem"
-										tabIndex={-1}
-										id="user-menu-item-2"
+										className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+										id="user-menu-button"
+										aria-expanded="false"
+										aria-haspopup="true"
+										onClick={handleOpenProfileMenu}
 									>
-										Sign Out
+										{/* biome-ignore lint/style/useSelfClosingElements: <explanation> */}
+										<span className="absolute -inset-1.5"></span>
+										<span className="sr-only">Open user menu</span>
+										<Image
+											className="h-8 w-8 rounded-full"
+											src={profileDefault}
+											alt=""
+										/>
 									</button>
 								</div>
-							)}
+
+								{/* <!-- Profile dropdown --> */}
+
+								{isProfileMenuOpen && (
+									<div
+										id="user-menu"
+										className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+										role="menu"
+										aria-orientation="vertical"
+										aria-labelledby="user-menu-button"
+										tabIndex={-1}
+									>
+										<Link
+											href="/profile"
+											className="block px-4 py-2 text-sm text-gray-700"
+											role="menuitem"
+											tabIndex={-1}
+											id="user-menu-item-0"
+										>
+											Your Profile
+										</Link>
+										<Link
+											href="/saved-properties"
+											className="block px-4 py-2 text-sm text-gray-700"
+											role="menuitem"
+											tabIndex={-1}
+											id="user-menu-item-2"
+										>
+											Saved Properties
+										</Link>
+										<button
+											type="button"
+											className="block px-4 py-2 text-sm text-gray-700"
+											role="menuitem"
+											tabIndex={-1}
+											id="user-menu-item-2"
+										>
+											Sign Out
+										</button>
+									</div>
+								)}
+							</div>
 						</div>
-					</div>
+					)}
 				</div>
 			</div>
 
@@ -199,31 +211,29 @@ const Navbar = () => {
 			{isMobileMenuOpen && (
 				<div id="mobile-menu">
 					<div className="space-y-1 px-2 pb-3 pt-2">
-						<Link
-							href="/index"
-							className="bg-black text-white block rounded-md px-3 py-2 text-base font-medium"
-						>
-							Home
-						</Link>
-						<Link
-							href="/properties"
-							className="text-white block rounded-md px-3 py-2 text-base font-medium"
-						>
-							Properties
-						</Link>
-						<Link
-							href="/properties/add"
-							className="text-white block rounded-md px-3 py-2 text-base font-medium"
-						>
-							Add Property
-						</Link>
-						<button
-							type="button"
-							className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-5"
-						>
-							<FaGoogle className="text-white mr-2" />
-							<span>Login or Register</span>
-						</button>
+						{links.map((link) => (
+							<Link
+								key={link.href}
+								href={link.href}
+								className={clsx(
+									"text-white block rounded-md px-3 py-2 text-base font-medium",
+									{ "bg-black": pathname === link.href },
+									{ hidden: !isLoggedIn && link.href === "/properties/add" },
+								)}
+							>
+								{link.name}
+							</Link>
+						))}
+
+						{!isLoggedIn && (
+							<button
+								type="button"
+								className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-5"
+							>
+								<FaGoogle className="text-white mr-2" />
+								<span>Login or Register</span>
+							</button>
+						)}
 					</div>
 				</div>
 			)}
