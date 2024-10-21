@@ -6,7 +6,7 @@ import Image from "next/image";
 import MobileMenu from "./MobileMenu";
 import Logo from "./Logo";
 import Menu from "./Menu";
-import GoogleButton from "app/ui/Buttons/GoogleButton";
+import GoogleButton from "@/ui/Buttons/GoogleButton";
 import Dropdown from "./Dropdown";
 import useWindowDimensions from "@/hooks/useWindowDimension";
 

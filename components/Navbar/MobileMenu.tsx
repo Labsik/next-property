@@ -3,7 +3,7 @@ import type { LinkType, MenuType } from "./Navbar.types";
 import Link from "next/link";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
-import GoogleButton from "app/ui/Buttons/GoogleButton";
+import GoogleButton from "@/ui/Buttons/GoogleButton";
 
 const MobileMenu = ({ isLoggedIn }: MenuType) => {
 	const pathname = usePathname();
