@@ -1,13 +1,14 @@
 "use client";
-import { useState } from "react";
-import clsx from "clsx";
+import { useEffect, useState } from "react";
 
-import logo from "@/assets/images/logo-white.png";
 import profileDefault from "@/assets/images/profile.png";
 import Image from "next/image";
-import Link from "next/link";
-import { FaGoogle } from "react-icons/fa";
-import { usePathname } from "next/navigation";
+import MobileMenu from "./MobileMenu";
+import Logo from "./Logo";
+import Menu from "./Menu";
+import GoogleButton from "app/ui/Buttons/GoogleButton";
+import Dropdown from "./Dropdown";
+import useWindowDimensions from "@/hooks/useWindowDimension";
 
 const Navbar = () => {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -15,10 +16,10 @@ const Navbar = () => {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-	const pathname = usePathname();
-	console.log("pathname", pathname);
+	const { width } = useWindowDimensions();
 
 	const handleOpenMobileMenu = () => {
+		console.log("click");
 		setIsMobileMenuOpen((prev) => !prev);
 	};
 
@@ -26,11 +27,12 @@ const Navbar = () => {
 		setIsProfileMenuOpen((prev) => !prev);
 	};
 
-	const links = [
-		{ name: "Home", href: "/" },
-		{ name: "Properties", href: "/properties" },
-		{ name: "Add Property", href: "/properties/add" },
-	];
+	useEffect(() => {
+		// NOTE: close mobile menu if the viewport size is changed
+		if (width !== undefined && width > 766) {
+			setIsMobileMenuOpen(false);
+		}
+	}, [width]);
 
 	return (
 		<nav className="bg-blue-700 border-b border-blue-500">
@@ -67,43 +69,16 @@ const Navbar = () => {
 
 					<div className="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
 						{/* <!-- Logo --> */}
-						<Link className="flex flex-shrink-0 items-center" href="/">
-							<Image className="h-10 w-auto" src={logo} alt="PropertyPulse" />
-
-							<span className="hidden md:block text-white text-2xl font-bold ml-2">
-								PropertyPulse
-							</span>
-						</Link>
+						<Logo />
 						{/* <!-- Desktop Menu Hidden below md screens --> */}
-						<div className="hidden md:ml-6 md:block">
-							<div className="flex space-x-2">
-								{links.map((link) => (
-									<Link
-										key={link.href}
-										href={link.href}
-										className={clsx("text-white block rounded-md px-3 py-2", {
-											"bg-black": pathname === link.href,
-											hidden: !isLoggedIn && link.href === "/properties/add",
-										})}
-									>
-										{link.name}
-									</Link>
-								))}
-							</div>
-						</div>
+						<Menu isLoggedIn={isLoggedIn} />
 					</div>
 
 					{/* <!-- Right Side Menu (Logged Out) --> */}
 					{!isLoggedIn && (
 						<div className="hidden md:block md:ml-6">
 							<div className="flex items-center">
-								<button
-									type="button"
-									className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
-								>
-									<FaGoogle className="text-white mr-2" />
-									<span>Login or Register</span>
-								</button>
+								<GoogleButton />
 							</div>
 						</div>
 					)}
@@ -163,44 +138,7 @@ const Navbar = () => {
 
 								{/* <!-- Profile dropdown --> */}
 
-								{isProfileMenuOpen && (
-									<div
-										id="user-menu"
-										className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-										role="menu"
-										aria-orientation="vertical"
-										aria-labelledby="user-menu-button"
-										tabIndex={-1}
-									>
-										<Link
-											href="/profile"
-											className="block px-4 py-2 text-sm text-gray-700"
-											role="menuitem"
-											tabIndex={-1}
-											id="user-menu-item-0"
-										>
-											Your Profile
-										</Link>
-										<Link
-											href="/saved-properties"
-											className="block px-4 py-2 text-sm text-gray-700"
-											role="menuitem"
-											tabIndex={-1}
-											id="user-menu-item-2"
-										>
-											Saved Properties
-										</Link>
-										<button
-											type="button"
-											className="block px-4 py-2 text-sm text-gray-700"
-											role="menuitem"
-											tabIndex={-1}
-											id="user-menu-item-2"
-										>
-											Sign Out
-										</button>
-									</div>
-								)}
+								{isProfileMenuOpen && <Dropdown />}
 							</div>
 						</div>
 					)}
@@ -208,35 +146,7 @@ const Navbar = () => {
 			</div>
 
 			{/* <!-- Mobile menu, show/hide based on menu state. --> */}
-			{isMobileMenuOpen && (
-				<div id="mobile-menu">
-					<div className="space-y-1 px-2 pb-3 pt-2">
-						{links.map((link) => (
-							<Link
-								key={link.href}
-								href={link.href}
-								className={clsx(
-									"text-white block rounded-md px-3 py-2 text-base font-medium",
-									{ "bg-black": pathname === link.href },
-									{ hidden: !isLoggedIn && link.href === "/properties/add" },
-								)}
-							>
-								{link.name}
-							</Link>
-						))}
-
-						{!isLoggedIn && (
-							<button
-								type="button"
-								className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-5"
-							>
-								<FaGoogle className="text-white mr-2" />
-								<span>Login or Register</span>
-							</button>
-						)}
-					</div>
-				</div>
-			)}
+			{isMobileMenuOpen && <MobileMenu isLoggedIn={isLoggedIn} />}
 		</nav>
 	);
 };
