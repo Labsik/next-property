@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "@/assets/styles/globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 export const metadata: Metadata = {
 	title: "Property Pulse",

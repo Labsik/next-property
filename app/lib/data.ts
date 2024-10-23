@@ -28,3 +28,18 @@ export async function fetchLatestProperties(): Promise<PropertyType[]> {
     throw new Error("Failed to fetch properties.");
   }
 }
+
+export async function fetchSingleProperty(
+  id: string
+): Promise<PropertyType | null | undefined> {
+  await connectDB();
+
+  try {
+    const property = await Property.findById(id).lean<PropertyType>();
+
+    return property;
+  } catch (error) {
+    console.error("Database Error:", error);
+    // throw new Error("Failed to fetch properties.");
+  }
+}

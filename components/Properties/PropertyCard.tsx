@@ -10,7 +10,6 @@ import {
 import type { PropertyCardProps } from "./properties.types";
 
 const PropertyCard = ({ property }: PropertyCardProps) => {
-	console.log("pppp", property);
 	const getRateDisplay = () => {
 		const { rates } = property;
 		if (rates.monthly) {

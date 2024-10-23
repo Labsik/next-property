@@ -19,7 +19,6 @@ const Navbar = () => {
 	const { width } = useWindowDimensions();
 
 	const handleOpenMobileMenu = () => {
-		console.log("click");
 		setIsMobileMenuOpen((prev) => !prev);
 	};
 
