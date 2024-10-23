@@ -7,13 +7,10 @@ import {
 	FaMoneyBill,
 	FaMapMarker,
 } from "react-icons/fa";
-import type { PropertyType } from "./properties.types";
+import type { PropertyCardProps } from "./properties.types";
 
-type PropertyProps = {
-	property: PropertyType;
-};
-
-const PropertyCard = ({ property }: PropertyProps) => {
+const PropertyCard = ({ property }: PropertyCardProps) => {
+	console.log("pppp", property);
 	const getRateDisplay = () => {
 		const { rates } = property;
 		if (rates.monthly) {

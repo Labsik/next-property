@@ -2,9 +2,10 @@ import React from "react";
 import properties from "../../../properties.json";
 import PropertyCard from "@/components/Properties/PropertyCard";
 import Link from "next/link";
+import { fetchLatestProperties } from "app/lib/data";
 
-const HomeProperties = () => {
-	const recentProperties = properties.slice(0, 3);
+const HomeProperties = async () => {
+	const recentProperties = await fetchLatestProperties();
 	return (
 		<>
 			<section className="px-4 py-6">

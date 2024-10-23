@@ -8,10 +8,10 @@ export type PropertyType = {
   beds: number;
   baths: number;
   square_feet: number;
-  amenities: Array<string>;
+  amenities: string[];
   rates: PropertyRates;
   seller_info: PropertySeller;
-  images: Array<string>;
+  images: string[];
   is_featured: boolean;
   createdAt: string;
   updatedAt: string;
@@ -34,4 +34,8 @@ export type PropertySeller = {
   name: string;
   email: string;
   phone: string;
+};
+
+export type PropertyCardProps = {
+  property: PropertyType;
 };
