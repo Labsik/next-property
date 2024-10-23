@@ -7,14 +7,13 @@ import { FaArrowLeft } from "react-icons/fa";
 import { notFound } from "next/navigation";
 
 const PropertyPage = async ({ params }: { params: { id: string } }) => {
-	const property = params.id && (await fetchSingleProperty(params.id));
+	const property = await fetchSingleProperty(params.id);
 
 	if (!property) {
 		notFound();
 	}
 
 	return (
-		// property && (
 		<>
 			<PropertyHeaderImage image={property?.images[0]} />
 			<section>
