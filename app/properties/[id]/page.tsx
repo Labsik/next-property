@@ -13,6 +13,11 @@ const PropertyPage = async ({ params }: { params: { id: string } }) => {
 		notFound();
 	}
 
+	if (property._id.toString() === "6717b088c2ccecbc32f9bd02") {
+		notFound();
+	}
+
+	console.log("property._id", property._id);
 	return (
 		<>
 			<PropertyHeaderImage image={property?.images[0]} />

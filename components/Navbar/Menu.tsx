@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { links } from "./config";
-import type { MenuType } from "./Navbar.types";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import type { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 
-const Menu = ({ isLoggedIn }: MenuType) => {
+export type Props = {
+	session: Session | null;
+};
+
+const Menu = () => {
+	const { data: session } = useSession();
+
 	const pathname = usePathname();
 
 	return (
@@ -16,7 +23,7 @@ const Menu = ({ isLoggedIn }: MenuType) => {
 						href={link.href}
 						className={clsx("text-white block rounded-md px-3 py-2", {
 							"bg-black": pathname === link.href,
-							hidden: !isLoggedIn && link.href === "/properties/add",
+							hidden: !session && link.href === "/properties/add",
 						})}
 					>
 						{link.name}

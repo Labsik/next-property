@@ -9,12 +9,26 @@ import Menu from "./Menu";
 import GoogleButton from "@/ui/Buttons/GoogleButton";
 import Dropdown from "./Dropdown";
 import useWindowDimensions from "@/hooks/useWindowDimension";
+import {
+	signIn,
+	useSession,
+	getProviders,
+	type LiteralUnion,
+	type ClientSafeProvider,
+} from "next-auth/react";
+import type { BuiltInProviderType } from "next-auth/providers/index";
 
 const Navbar = () => {
+	const { data: session } = useSession();
+
+	const profileImage = session?.user?.image;
+
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [providers, setProviders] = useState<Record<
+		LiteralUnion<BuiltInProviderType, string>,
+		ClientSafeProvider
+	> | null>(null);
 
 	const { width } = useWindowDimensions();
 
@@ -25,6 +39,15 @@ const Navbar = () => {
 	const handleOpenProfileMenu = () => {
 		setIsProfileMenuOpen((prev) => !prev);
 	};
+
+	useEffect(() => {
+		const setAuthProviders = async () => {
+			const res = await getProviders();
+			setProviders(res);
+		};
+
+		setAuthProviders();
+	}, []);
 
 	useEffect(() => {
 		// NOTE: close mobile menu if the viewport size is changed
@@ -70,20 +93,26 @@ const Navbar = () => {
 						{/* <!-- Logo --> */}
 						<Logo />
 						{/* <!-- Desktop Menu Hidden below md screens --> */}
-						<Menu isLoggedIn={isLoggedIn} />
+						<Menu />
 					</div>
 
 					{/* <!-- Right Side Menu (Logged Out) --> */}
-					{!isLoggedIn && (
+					{!session && (
 						<div className="hidden md:block md:ml-6">
 							<div className="flex items-center">
-								<GoogleButton />
+								{providers &&
+									Object.values(providers).map((provider) => (
+										<GoogleButton
+											onClick={() => signIn(provider.id)}
+											key={provider.id}
+										/>
+									))}
 							</div>
 						</div>
 					)}
 
 					{/* <!-- Right Side Menu (Logged In) --> */}
-					{isLoggedIn && (
+					{session && (
 						<div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
 							<a href="messages" className="relative group">
 								<button
@@ -129,15 +158,19 @@ const Navbar = () => {
 										<span className="sr-only">Open user menu</span>
 										<Image
 											className="h-8 w-8 rounded-full"
-											src={profileDefault}
-											alt=""
+											src={profileImage ?? profileDefault}
+											width={40}
+											height={40}
+											alt="Profile Logo"
 										/>
 									</button>
 								</div>
 
 								{/* <!-- Profile dropdown --> */}
 
-								{isProfileMenuOpen && <Dropdown />}
+								{isProfileMenuOpen && (
+									<Dropdown setIsProfileMenuOpen={setIsProfileMenuOpen} />
+								)}
 							</div>
 						</div>
 					)}
@@ -145,7 +178,7 @@ const Navbar = () => {
 			</div>
 
 			{/* <!-- Mobile menu, show/hide based on menu state. --> */}
-			{isMobileMenuOpen && <MobileMenu isLoggedIn={isLoggedIn} />}
+			{isMobileMenuOpen && <MobileMenu providers={providers} />}
 		</nav>
 	);
 };

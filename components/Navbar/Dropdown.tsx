@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { dropdownLinks } from "./config";
+import { signOut } from "next-auth/react";
+type Props = {
+	setIsProfileMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-const Dropdown = () => {
+const Dropdown = ({ setIsProfileMenuOpen }: Props) => {
 	return (
 		<div
 			id="user-menu"
@@ -30,6 +34,10 @@ const Dropdown = () => {
 				role="menuitem"
 				tabIndex={-1}
 				id="user-menu-item-2"
+				onClick={() => {
+					signOut();
+					setIsProfileMenuOpen(false);
+				}}
 			>
 				Sign Out
 			</button>
