@@ -1,23 +1,24 @@
 import PropertyDetails from "@/components/PropertyItem/PropertyDetails";
 import PropertyHeaderImage from "@/components/PropertyItem/PropertyHeaderImage";
+import PropertyImages from "@/components/PropertyItem/PropertyImages";
 
 import { fetchSingleProperty } from "app/lib/data";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
-import { notFound } from "next/navigation";
+// import { notFound } from "next/navigation";
 
 const PropertyPage = async ({ params }: { params: { id: string } }) => {
 	const property = await fetchSingleProperty(params.id);
 
-	if (!property) {
-		notFound();
-	}
+	// if (!property) {
+	// 	notFound();
+	// }
 
-	if (property._id.toString() === "6717b088c2ccecbc32f9bd02") {
-		notFound();
-	}
+	// if (property?._id.toString() === "6717b088c2ccecbc32f9bd02") {
+	// 	notFound();
+	// }
 
-	console.log("property._id", property._id);
+	console.log("property._id", property?._id);
 	return (
 		<>
 			<PropertyHeaderImage image={property?.images[0]} />
@@ -45,8 +46,8 @@ const PropertyPage = async ({ params }: { params: { id: string } }) => {
 					</div>
 				</div>
 			</section>
+			<PropertyImages images={property.images} />
 		</>
-		// )
 	);
 };
 

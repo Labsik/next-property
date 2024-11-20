@@ -21,6 +21,8 @@ import type { BuiltInProviderType } from "next-auth/providers/index";
 const Navbar = () => {
 	const { data: session } = useSession();
 
+	console.log("ssecion", session);
+
 	const profileImage = session?.user?.image;
 
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
