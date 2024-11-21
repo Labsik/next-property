@@ -7,7 +7,7 @@ import { getSessionUser } from "@/utils/getSessionUser";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-interface AddPropertyData {
+export interface AddPropertyData {
 	type: FormDataEntryValue | null;
 	name: FormDataEntryValue | null;
 	description: FormDataEntryValue | null;
