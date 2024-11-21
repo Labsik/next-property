@@ -1,6 +1,8 @@
+import type { PropertyType } from "@/components/Properties/properties.types";
 import PropertyDetails from "@/components/PropertyItem/PropertyDetails";
 import PropertyHeaderImage from "@/components/PropertyItem/PropertyHeaderImage";
 import PropertyImages from "@/components/PropertyItem/PropertyImages";
+import { convertToSerializeableObject } from "@/utils/convertToObject";
 
 import { fetchSingleProperty } from "app/lib/data";
 import Link from "next/link";
@@ -8,17 +10,18 @@ import { FaArrowLeft } from "react-icons/fa";
 // import { notFound } from "next/navigation";
 
 const PropertyPage = async ({ params }: { params: { id: string } }) => {
-	const property = await fetchSingleProperty(params.id);
+	const propertyDoc = await fetchSingleProperty(params.id);
 
-	// if (!property) {
-	// 	notFound();
-	// }
+	const property = convertToSerializeableObject(propertyDoc) as PropertyType;
 
-	// if (property?._id.toString() === "6717b088c2ccecbc32f9bd02") {
-	// 	notFound();
-	// }
+	if (!property) {
+		return (
+			<h1 className="text-center text-2xl font-bold mt-10">
+				Property Not Found
+			</h1>
+		);
+	}
 
-	console.log("property._id", property?._id);
 	return (
 		<>
 			<PropertyHeaderImage image={property?.images[0]} />

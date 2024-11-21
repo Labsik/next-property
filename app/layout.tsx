@@ -3,6 +3,9 @@ import "@/assets/styles/globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import AuthProvider from "@/components/AuthProvider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
@@ -23,6 +26,7 @@ export default function RootLayout({
 					<Navbar />
 					<main>{children}</main>
 					<Footer />
+					<ToastContainer />
 				</body>
 			</html>
 		</AuthProvider>

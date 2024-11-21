@@ -5,6 +5,8 @@ import { useState } from "react";
 import type { PropertyType } from "@/components/Properties/properties.types";
 import Image from "next/image";
 import Link from "next/link";
+import deleteProperty from "app/actions/deleteProperty";
+import { toast } from "react-toastify";
 
 type Props = {
 	initialProperties: PropertyType[];
@@ -12,6 +14,22 @@ type Props = {
 
 const ProfileProperies = ({ initialProperties }: Props) => {
 	const [properties, setProperties] = useState(initialProperties);
+
+	const handleDeleteProperty = async (propertyId: string) => {
+		const confirmed = window.confirm("Are you sure you want to delete?");
+
+		if (!confirmed) return;
+
+		await deleteProperty(propertyId);
+
+		const updatedProperties = properties.filter(
+			(property) => property._id !== propertyId,
+		);
+
+		setProperties(updatedProperties);
+
+		toast.success("Deleted successfully");
+	};
 
 	return properties.length > 0 ? (
 		properties?.map((property: PropertyType) => (
@@ -44,6 +62,7 @@ const ProfileProperies = ({ initialProperties }: Props) => {
 					<button
 						className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600"
 						type="button"
+						onClick={() => handleDeleteProperty(property._id)}
 					>
 						Delete
 					</button>
