@@ -18,7 +18,6 @@ export default function RootLayout({
 }>) {
 	return (
 		<AuthProvider>
-			
 			<html lang="en">
 				<body>
 					<Navbar />

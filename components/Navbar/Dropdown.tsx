@@ -15,14 +15,15 @@ const Dropdown = ({ setIsProfileMenuOpen }: Props) => {
 			aria-labelledby="user-menu-button"
 			tabIndex={-1}
 		>
-			{dropdownLinks.map((link) => (
+			{dropdownLinks.map((link, index) => (
 				<Link
 					key={link.href}
 					href={link.href}
 					className="block px-4 py-2 text-sm text-gray-700"
 					role="menuitem"
 					tabIndex={-1}
-					id="user-menu-item-0"
+					onClick={() => setIsProfileMenuOpen(false)}
+					id={`user-menu-item-${index}`}
 				>
 					{link.name}
 				</Link>
