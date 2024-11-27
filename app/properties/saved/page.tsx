@@ -16,8 +16,6 @@ const SavedPropertiesPage = async () => {
 		.populate("bookmarks")
 		.lean<UserType | null>();
 
-	console.log("dffasadsda", dataDocs);
-
 	const data = dataDocs && (convertToSerializeableObject(dataDocs) as UserType);
 
 	const bookmarks = data?.bookmarks;

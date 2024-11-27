@@ -3,8 +3,12 @@ import PropertyContactForm from "@/components/PropertyItem/PropertyContactForm";
 import PropertyDetails from "@/components/PropertyItem/PropertyDetails";
 import PropertyHeaderImage from "@/components/PropertyItem/PropertyHeaderImage";
 import PropertyImages from "@/components/PropertyItem/PropertyImages";
+import connectDB from "@/config/database";
+import User, { type UserType } from "@/models/User";
+import BookmarkButton from "@/ui/Buttons/BookmarkButton";
 import ShareButtons from "@/ui/Buttons/ShareButtons";
 import { convertToSerializeableObject } from "@/utils/convertToObject";
+import { getSessionUser } from "@/utils/getSessionUser";
 
 import { fetchSingleProperty } from "app/lib/data";
 import Link from "next/link";
@@ -12,6 +16,10 @@ import { FaArrowLeft } from "react-icons/fa";
 // import { notFound } from "next/navigation";
 
 const PropertyPage = async ({ params }: { params: { id: string } }) => {
+	await connectDB();
+	const sessionUser = await getSessionUser();
+
+	const userId = sessionUser?.userId;
 	const propertyDoc = await fetchSingleProperty(params.id);
 
 	const property = convertToSerializeableObject(propertyDoc) as PropertyType;
@@ -23,6 +31,14 @@ const PropertyPage = async ({ params }: { params: { id: string } }) => {
 			</h1>
 		);
 	}
+
+	const dataDocs: UserType | null = await User.findById(userId)
+		// .populate("bookmarks")
+		.lean<UserType | null>();
+
+	const bookmarks = JSON.parse(JSON.stringify(dataDocs?.bookmarks));
+
+	console.log(bookmarks);
 
 	return (
 		<>
@@ -44,7 +60,7 @@ const PropertyPage = async ({ params }: { params: { id: string } }) => {
 
 						{/* <!-- Sidebar --> */}
 						<aside className="space-y-4">
-							{/* <BookmarkButton property={property} /> */}
+							<BookmarkButton bookmarks={bookmarks} property={property} />
 							<ShareButtons property={property} />
 							<PropertyContactForm property={property} />
 						</aside>

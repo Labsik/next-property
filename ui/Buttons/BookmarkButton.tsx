@@ -9,16 +9,17 @@ import bookmarkProperty from "app/actions/bookmarkProperty";
 
 type Props = {
 	property: PropertyType;
+	bookmarks: string[];
 };
 
-const BookmarkButton = ({ property }: Props) => {
+const BookmarkButton = ({ property, bookmarks }: Props) => {
 	const { data: session } = useSession();
-
-	console.log("session", session);
 
 	const user = session?.user;
 
-	const [isBookmarked, setIsBookmarked] = useState(false);
+	const checkBookmark = bookmarks.find((bookmark) => bookmark === property._id);
+
+	const [isBookmarked, setIsBookmarked] = useState(checkBookmark ?? false);
 
 	const handleClick = async () => {
 		if (!user) {
