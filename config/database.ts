@@ -10,11 +10,7 @@ const connectDB = async () => {
 	}
 
 	try {
-		await mongoose.connect(process.env.MONGODB_URI as string, {
-			retryWrites: true, // Enable retryWrites (MongoDB will retry write operations if network errors occur)
-			connectTimeoutMS: 100000, // Timeout after 10 seconds
-			socketTimeoutMS: 450000, // Timeout after 45 seconds of inactivity
-		});
+		await mongoose.connect(process.env.MONGODB_URI as string);
 	} catch (error) {
 		console.log("error", error);
 	}

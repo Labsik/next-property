@@ -47,7 +47,6 @@ const updateProperty = async (propertyId: string, formData: FormData) => {
 			email: formData.get("seller_info.email"),
 			phone: formData.get("seller_info.phone"),
 		},
-		images: [],
 		owner: userId,
 	};
 

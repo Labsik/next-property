@@ -34,7 +34,7 @@ const ProfileProperies = ({ initialProperties }: Props) => {
 	return properties.length > 0 ? (
 		properties?.map((property: PropertyType) => (
 			<div className="mb-10" key={property._id}>
-				<Link href={property._id}>
+				<Link href={`properties/${property._id}`}>
 					<Image
 						className="h-32 w-full rounded-md object-cover"
 						src={property.images[0]}

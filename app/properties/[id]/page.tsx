@@ -1,7 +1,9 @@
 import type { PropertyType } from "@/components/Properties/properties.types";
+import PropertyContactForm from "@/components/PropertyItem/PropertyContactForm";
 import PropertyDetails from "@/components/PropertyItem/PropertyDetails";
 import PropertyHeaderImage from "@/components/PropertyItem/PropertyHeaderImage";
 import PropertyImages from "@/components/PropertyItem/PropertyImages";
+import ShareButtons from "@/ui/Buttons/ShareButtons";
 import { convertToSerializeableObject } from "@/utils/convertToObject";
 
 import { fetchSingleProperty } from "app/lib/data";
@@ -41,11 +43,11 @@ const PropertyPage = async ({ params }: { params: { id: string } }) => {
 						<PropertyDetails property={property} />
 
 						{/* <!-- Sidebar --> */}
-						{/* <aside className="space-y-4">
-								<BookmarkButton property={property} />
-								<ShareButtons property={property} />
-								<PropertyContactForm property={property} />
-							</aside> */}
+						<aside className="space-y-4">
+							{/* <BookmarkButton property={property} /> */}
+							<ShareButtons property={property} />
+							<PropertyContactForm property={property} />
+						</aside>
 					</div>
 				</div>
 			</section>
